@@ -46,10 +46,21 @@ except Exception as e:
     print(f"Hata: Font dosyası yüklenemedi. 'fonts/' klasöründeki dosyalardan emin olun. Hata: {e}")
 
 # --- Database Configuration ---
-engine = create_engine("sqlite:///servis.db", echo=False)
+import os
+
+# Render'dan gelen DATABASE_URL ortam değişkenini kullanır
+# Eğer bu değişken yoksa (yerel geliştirme için), SQLite kullanır
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    DATABASE_URL = "sqlite:///servis.db"
+
+engine = create_engine(DATABASE_URL, echo=False)
 Base = declarative_base()
 SessionLocal = sessionmaker(bind=engine)
 session = SessionLocal()
+
+# --- Database Models ---
+# ... (Diğer kodunuz aynı kalacak)
 
 # --- Database Models ---
 class User(Base):
